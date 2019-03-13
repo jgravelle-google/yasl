@@ -520,16 +520,27 @@ static struct Node *parse_constant(Parser *const parser) {
 	case T_CONT:
 	case T_IF:
 	case T_ELSEIF:
+#ifdef __EMSCRIPTEN__
+	case T_ELSE:YASL_PRINT_ERROR_SYNTAX("ParsingError in line %lu"
+						    ": expected expression, got `%s`\n", parser->lex.line,
+					    YASL_TOKEN_NAMES[curtok(parser)]);
+#else
 	case T_ELSE:YASL_PRINT_ERROR_SYNTAX("ParsingError in line %"
 						    PRId64
 						    ": expected expression, got `%s`\n", parser->lex.line,
 					    YASL_TOKEN_NAMES[curtok(parser)]);
+#endif
 		return handle_error(parser);
 	case T_UNKNOWN:parser->status = parser->lex.status;
 		return NULL;
+#ifdef __EMSCRIPTEN__
+	default:YASL_PRINT_ERROR_SYNTAX("Invalid expression in line %lu"
+						" (%s).\n", parser->lex.line, YASL_TOKEN_NAMES[curtok(parser)]);
+#else
 	default:YASL_PRINT_ERROR_SYNTAX("Invalid expression in line %"
 						PRId64
 						" (%s).\n", parser->lex.line, YASL_TOKEN_NAMES[curtok(parser)]);
+#endif
 		return handle_error(parser);
 	}
 }

@@ -11,6 +11,8 @@ include_directories(std-io)
 include_directories(std-math)
 include_directories(test)
 
+set(CMAKE_EXECUTABLE_SUFFIX ".html")
+
 add_executable(YASL
         yasl.c
         main.c
